@@ -31,7 +31,7 @@ func (srv *FileServer) Stat(ctx context.Context, req *gnoi_file_pb.StatRequest) 
 }
 
 func ReadFileStat(path string) (*gnoi_file_pb.StatInfo, error) {
-	sc, err := ssc.NewDbusClient()
+	sc, err := ssc.NewDbusClient(dbusCaller)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "DBus client init failed: %v", err)
 	}
@@ -115,7 +115,7 @@ func (srv *FileServer) Remove(ctx context.Context, req *gnoi_file_pb.RemoveReque
 	if req.GetRemoteFile() == "" {
 		return nil, status.Error(codes.InvalidArgument, "Invalid request: remote_file field is empty.")
 	}
-	sc, err := ssc.NewDbusClient()
+	sc, err := ssc.NewDbusClient(dbusCaller)
 	if err != nil {
 		return nil, err
 	}

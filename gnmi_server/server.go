@@ -56,6 +56,7 @@ type Server struct {
 	ReqFromMaster func(req *gnmipb.SetRequest, masterEID *uint128) error
 	masterEID     uint128
 	gnoi_system_pb.UnimplementedSystemServer
+	ConnectionManager *ConnectionManager
 }
 
 // FileServer is the server API for File service.
@@ -217,6 +218,8 @@ func NewServer(config *Config, opts []grpc.ServerOption) (*Server, error) {
 	}
 	spb_gnoi.RegisterDebugServer(srv.s, srv)
 	log.V(1).Infof("Created Server on %s, read-only: %t", srv.Address(), !srv.config.EnableTranslibWrite)
+
+	srv.ConnectionManager = CreateConnectionManager(srv.config.Threshold)
 	return srv, nil
 }
 
